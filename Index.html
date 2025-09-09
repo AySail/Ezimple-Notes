@@ -1,0 +1,356 @@
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ezimple Notes - Open Source Markdown Note-Taking App</title>
+  <meta name="description" content="Ezimple Notes is a lightweight, open source markdown note-taking app designed for developers and users who want a simple, offline, private, and powerful notes experience. No accounts, no servers — just your notes, anywhere." />
+  <meta name="keywords" content="note taking, open source notes, markdown notes, offline notes app, developer tools, vaults, ezimple notes, localStorage, markdown editor" />
+  <meta name="author" content="Jer (@aysail)" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://yourdomain.com/index.html" />
+  
+  <style>
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto 4rem;
+      padding: 0 1rem;
+    }
+    header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1.5rem;
+    }
+    header button {
+      background-color: #27ae60;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      padding: 0.75rem 2.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgb(39 174 96 / 0.5);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    header button:hover {
+      background-color: #2ecc71;
+      box-shadow: 0 6px 15px rgb(46 204 113 / 0.6);
+    }
+    h1 {
+      font-size: 2.75rem;
+      margin-bottom: 0.25rem;
+      color: #2c3e50;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    h1 span {
+      font-size: 2.75rem;
+    }
+    .tagline {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #27ae60;
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+      font-style: italic;
+      user-select: none;
+      text-align: center;
+    }
+    main h2 {
+      margin-top: 2rem;
+      border-bottom: 2px solid #4caf50;
+      padding-bottom: 0.25rem;
+      color: #27ae60;
+      font-weight: 700;
+    }
+    p, li {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+    ul {
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    li span {
+      font-size: 1.25rem;
+      color: #27ae60;
+      display: inline-block;
+      min-width: 1.4em;
+      text-align: center;
+    }
+    a {
+      color: #2980b9;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    code {
+      background: #eee;
+      padding: 3px 6px;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 1.05rem;
+      display: block;
+      max-width: fit-content;
+      margin: 0.75rem 0 1.5rem;
+      user-select: all;
+      box-shadow: inset 0 0 5px #ccc;
+    }
+    /* Q&A Section */
+    .qa-section {
+      background: #eafaf1;
+      border: 2px solid #27ae60;
+      border-radius: 12px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 8px rgb(39 174 96 / 0.15);
+    }
+    .qa-section h2 {
+      margin-top: 0;
+      color: #196f3d;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+    .qa {
+      margin-bottom: 1.25rem;
+    }
+    .qa-question {
+      font-weight: 600;
+      color: #2c3e50;
+      cursor: default;
+      margin-bottom: 0.3rem;
+      position: relative;
+      padding-left: 1.6rem;
+    }
+    .qa-question::before {
+      content: "❓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 1.2rem;
+    }
+    .qa-answer {
+      padding-left: 1.6rem;
+      color: #555;
+      font-style: normal;
+      line-height: 1.4;
+    }
+    /* Highlight How to Clone App Section */
+    .clone-section {
+      background: #f0fff4;
+      border-left: 6px solid #27ae60;
+      padding: 1rem 1.5rem;
+      margin: 2rem 0 3rem;
+      box-shadow: 0 4px 10px rgb(39 174 96 / 0.15);
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1rem 1rem 2rem;
+      font-size: 0.9rem;
+      text-align: center;
+      color: #777;
+      border-top: 1px solid #e1e1e1;
+    }
+
+    /* Comparison Chart */
+    .comparison-chart {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0 4rem;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      box-shadow: 0 0 20px rgb(0 0 0 / 0.05);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .comparison-chart .row {
+      display: grid;
+      grid-template-columns: 220px repeat(5, 1fr);
+      border-bottom: 1px solid #ddd;
+      background: white;
+    }
+    .comparison-chart .row.header {
+      background-color: #27ae60;
+      color: white;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .comparison-chart .row.header .cell {
+      border-right: 1px solid rgba(255 255 255 / 0.3);
+    }
+    .comparison-chart .row:not(.header):nth-child(even) {
+      background-color: #f7fdf9;
+    }
+    .comparison-chart .cell {
+      padding: 1rem 1.25rem;
+      border-right: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+    }
+    .comparison-chart .cell.corner {
+      font-weight: 700;
+      color: #27ae60;
+    }
+    .comparison-chart .row:last-child {
+      border-bottom: none;
+    }
+    @media (max-width: 720px) {
+      .comparison-chart .row {
+        grid-template-columns: 140px repeat(5, minmax(0, 1fr));
+        font-size: 0.9rem;
+      }
+      .comparison-chart .cell {
+        padding: 0.6rem 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <button aria-label="Start your notes now" onclick="location.href='App.html'">Start Your Notes Now</button>
+    </header>
+
+    <h1>✨ Ezimple Notes</h1>
+    <div class="tagline" role="presentation">Easy To use, Next Level Noting</div>
+
+    <!-- Q&A Section -->
+    <section class="qa-section" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">FAQs for Developers & Note Takers</h2>
+      <div class="qa">
+        <div class="qa-question">What is Ezimple Notes?</div>
+        <div class="qa-answer">Ezimple Notes is a lightweight, open source markdown note-taking app designed for developers and users who want a simple, offline, private, and powerful notes experience.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-question">Do I need an account or internet connection?</div>
+        <div class="qa-answer">No accounts or servers required — your data stays local and private, and the app works offline perfectly.</div>
+      </div>
+      <div class="qa">
+        <div class="qa-question">Why should I use Ezimple Notes?</div>
+        <div class="qa-answer">If you love open source tools, markdown formatting, and fast, private note-taking without distractions, Ezimple Notes is built for you.</div>
+      </div>
+    </section>
+
+    <main>
+      <h2>Comparison of Popular Note-Taking Apps</h2>
+
+      <div role="table" aria-label="Comparison of Ezimple Notes vs Other Note Apps" class="comparison-chart">
+        <div role="rowgroup">
+          <div role="row" class="row header">
+            <div role="columnheader" class="cell corner">Features</div>
+            <div role="columnheader" class="cell">Ezimple Notes</div>
+            <div role="columnheader" class="cell">N Notes<br />(Notion)</div>
+            <div role="columnheader" class="cell">O Notes<br />(OneNote)</div>
+            <div role="columnheader" class="cell">S Notes<br />(Samsung Notes)</div>
+            <div role="columnheader" class="cell">G Notes<br />(Google Keep)</div>
+          </div>
+        </div>
+        <div role="rowgroup">
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Open Source</div>
+            <div role="cell" class="cell">✅ Yes</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+          </div>
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Markdown Support</div>
+            <div role="cell" class="cell">✅ Full Support</div>
+            <div role="cell" class="cell">✅ Partial</div>
+            <div role="cell" class="cell">✅ Partial</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+          </div>
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Offline Functionality</div>
+            <div role="cell" class="cell">✅ Fully Offline &amp; Private</div>
+            <div role="cell" class="cell">⚠️ Limited Offline Access</div>
+            <div role="cell" class="cell">✅ Yes (Full Offline)</div>
+            <div role="cell" class="cell">✅ Yes (Full Offline)</div>
+            <div role="cell" class="cell">✅ Yes (Full Offline)</div>
+          </div>
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Data Stored Locally</div>
+            <div role="cell" class="cell">✅ Yes (LocalStorage)</div>
+            <div role="cell" class="cell">❌ Mostly Cloud</div>
+            <div role="cell" class="cell">✅ Yes &amp; Cloud Sync</div>
+            <div role="cell" class="cell">✅ Yes &amp; Cloud Sync</div>
+            <div role="cell" class="cell">✅ Yes &amp; Cloud Sync</div>
+          </div>
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Mobile Friendly</div>
+            <div role="cell" class="cell">✅ Yes (PWA)</div>
+            <div role="cell" class="cell">✅ Yes</div>
+            <div role="cell" class="cell">✅ Yes</div>
+            <div role="cell" class="cell">✅ Yes</div>
+            <div role="cell" class="cell">✅ Yes</div>
+          </div>
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Encryption</div>
+            <div role="cell" class="cell">✅ Optional Encryption</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+            <div role="cell" class="cell">❌ No</div>
+          </div>
+          <div role="row" class="row">
+            <div role="rowheader" class="cell">Sync Across Devices</div>
+            <div role="cell" class="cell">❌ No (LocalStorage Only)</div>
+            <div role="cell" class="cell">✅ Yes (Cloud Sync)</div>
+            <div role="cell" class="cell">✅ Yes (Microsoft Cloud)</div>
+            <div role="cell" class="cell">✅ Yes (Samsung Cloud)</div>
+            <div role="cell" class="cell">✅ Yes (Google Account)</div>
+          </div>
+        </div>
+      </div>
+
+      <h2>How to Clone the Ezimple Notes App</h2>
+      <div class="clone-section" role="region" aria-label="How to clone the Ezimple Notes app from GitHub">
+        <p>Clone this open source app to your computer or server using Git:</p>
+        <code>git clone https://github.com/aysail/ezimple-notes.git</code>
+        <p>Or download the ZIP archive from the <a href="https://github.com/aysail/ezimple-notes" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
+      </div>
+
+      <h2>Why Choose Ezimple Notes?</h2>
+      <ul>
+        <li><span>✔️</span> Fully open source with no hidden tracking</li>
+        <li><span>✔️</span> No accounts or signups required</li>
+        <li><span>✔️</span> Works completely offline with local storage</li>
+        <li><span>✔️</span> Markdown formatting and preview</li>
+        <li><span>✔️</span> Encryption available for private vaults</li>
+        <li><span>✔️</span> Fast, intuitive, and minimal UI</li>
+      </ul>
+    </main>
+  </div>
+
+  <footer>
+    © 2025 Ezimple Notes by Jer. All rights reserved.
+  </footer>
+</body>
+</html>
