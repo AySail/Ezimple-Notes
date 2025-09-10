@@ -1,356 +1,324 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ezimple Notes - Open Source Markdown Note-Taking App</title>
-  <meta name="description" content="Ezimple Notes is a lightweight, open source markdown note-taking app designed for developers and users who want a simple, offline, private, and powerful notes experience. No accounts, no servers — just your notes, anywhere." />
-  <meta name="keywords" content="note taking, open source notes, markdown notes, offline notes app, developer tools, vaults, ezimple notes, localStorage, markdown editor" />
-  <meta name="author" content="Jer (@aysail)" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://yourdomain.com/index.html" />
-  
-  <style>
-    /* Reset & base */
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f9fafb;
-      color: #333;
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto 4rem;
-      padding: 0 1rem;
-    }
-    header {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 1.5rem;
-    }
-    header button {
-      background-color: #27ae60;
-      border: none;
-      color: white;
-      font-size: 1.2rem;
-      padding: 0.75rem 2.5rem;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgb(39 174 96 / 0.5);
-      transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    header button:hover {
-      background-color: #2ecc71;
-      box-shadow: 0 6px 15px rgb(46 204 113 / 0.6);
-    }
-    h1 {
-      font-size: 2.75rem;
-      margin-bottom: 0.25rem;
-      color: #2c3e50;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    h1 span {
-      font-size: 2.75rem;
-    }
-    .tagline {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #27ae60;
-      margin-bottom: 2rem;
-      letter-spacing: 0.05em;
-      font-style: italic;
-      user-select: none;
-      text-align: center;
-    }
-    main h2 {
-      margin-top: 2rem;
-      border-bottom: 2px solid #4caf50;
-      padding-bottom: 0.25rem;
-      color: #27ae60;
-      font-weight: 700;
-    }
-    p, li {
-      font-size: 1.1rem;
-      margin-bottom: 0.75rem;
-    }
-    ul {
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    li span {
-      font-size: 1.25rem;
-      color: #27ae60;
-      display: inline-block;
-      min-width: 1.4em;
-      text-align: center;
-    }
-    a {
-      color: #2980b9;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    code {
-      background: #eee;
-      padding: 3px 6px;
-      border-radius: 5px;
-      font-family: monospace;
-      font-size: 1.05rem;
-      display: block;
-      max-width: fit-content;
-      margin: 0.75rem 0 1.5rem;
-      user-select: all;
-      box-shadow: inset 0 0 5px #ccc;
-    }
-    /* Q&A Section */
-    .qa-section {
-      background: #eafaf1;
-      border: 2px solid #27ae60;
-      border-radius: 12px;
-      padding: 1.5rem 2rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 4px 8px rgb(39 174 96 / 0.15);
-    }
-    .qa-section h2 {
-      margin-top: 0;
-      color: #196f3d;
-      font-weight: 700;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
-    .qa {
-      margin-bottom: 1.25rem;
-    }
-    .qa-question {
-      font-weight: 600;
-      color: #2c3e50;
-      cursor: default;
-      margin-bottom: 0.3rem;
-      position: relative;
-      padding-left: 1.6rem;
-    }
-    .qa-question::before {
-      content: "❓";
-      position: absolute;
-      left: 0;
-      top: 0;
-      font-size: 1.2rem;
-    }
-    .qa-answer {
-      padding-left: 1.6rem;
-      color: #555;
-      font-style: normal;
-      line-height: 1.4;
-    }
-    /* Highlight How to Clone App Section */
-    .clone-section {
-      background: #f0fff4;
-      border-left: 6px solid #27ae60;
-      padding: 1rem 1.5rem;
-      margin: 2rem 0 3rem;
-      box-shadow: 0 4px 10px rgb(39 174 96 / 0.15);
-      border-radius: 8px;
-      font-size: 1.1rem;
-    }
-    footer {
-      margin-top: auto;
-      padding: 1rem 1rem 2rem;
-      font-size: 0.9rem;
-      text-align: center;
-      color: #777;
-      border-top: 1px solid #e1e1e1;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ezimple Notes — Simple & Powerful Markdown Note-taking</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background: #fafafa;
+    color: #222;
+    line-height: 1.6;
+  }
+
+  header {
+    background: white;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #4a90e2;
+    user-select: none;
+    cursor: default;
+    letter-spacing: -0.02em;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: #4a90e2;
+    font-weight: 600;
+    margin-left: 20px;
+    transition: color 0.3s ease;
+  }
+
+  nav a:hover {
+    color: #0b57d0;
+  }
+
+  main {
+    padding: 120px 0 60px;
+  }
+
+  /* HERO */
+
+  .hero {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 80px;
+  }
+
+  .hero h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+    color: #222;
+  }
+
+  .hero h1 .dynamic-text {
+    color: #4a90e2;
+    border-right: 2px solid #4a90e2;
+    padding-right: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .hero p {
+    font-size: 1.125rem;
+    color: #555;
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .btn-primary {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 14px 36px;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgb(74 144 226 / 0.3);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #0b57d0;
+    box-shadow: 0 10px 20px rgb(11 87 208 / 0.5);
+  }
+
+  /* FEATURES */
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 32px;
+  }
+
+  .feature-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 0.07);
+    padding: 28px 24px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: default;
+    user-select: none;
+  }
+
+  .feature-card:hover {
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.12);
+    transform: translateY(-6px);
+  }
+
+  .feature-icon {
+    font-size: 36px;
+    color: #4a90e2;
+    margin-bottom: 18px;
+    user-select: none;
+  }
+
+  .feature-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+  }
+
+  .feature-desc {
+    color: #555;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  /* FOOTER */
+
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 0.875rem;
+    color: #999;
+    user-select: none;
+  }
+
+  /* Scroll reveal animation */
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Responsive */
+
+  @media (max-width: 480px) {
+    .hero h1 {
+      font-size: 2.4rem;
     }
 
-    /* Comparison Chart */
-    .comparison-chart {
+    nav {
+      padding: 0 10px;
+    }
+
+    .btn-primary {
       width: 100%;
-      border-collapse: collapse;
-      margin: 2rem 0 4rem;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      box-shadow: 0 0 20px rgb(0 0 0 / 0.05);
-      border-radius: 10px;
-      overflow: hidden;
+      padding: 14px 0;
     }
-    .comparison-chart .row {
-      display: grid;
-      grid-template-columns: 220px repeat(5, 1fr);
-      border-bottom: 1px solid #ddd;
-      background: white;
-    }
-    .comparison-chart .row.header {
-      background-color: #27ae60;
-      color: white;
-      font-weight: 700;
-      font-size: 1.05rem;
-    }
-    .comparison-chart .row.header .cell {
-      border-right: 1px solid rgba(255 255 255 / 0.3);
-    }
-    .comparison-chart .row:not(.header):nth-child(even) {
-      background-color: #f7fdf9;
-    }
-    .comparison-chart .cell {
-      padding: 1rem 1.25rem;
-      border-right: 1px solid #ddd;
-      display: flex;
-      align-items: center;
-    }
-    .comparison-chart .cell.corner {
-      font-weight: 700;
-      color: #27ae60;
-    }
-    .comparison-chart .row:last-child {
-      border-bottom: none;
-    }
-    @media (max-width: 720px) {
-      .comparison-chart .row {
-        grid-template-columns: 140px repeat(5, minmax(0, 1fr));
-        font-size: 0.9rem;
-      }
-      .comparison-chart .cell {
-        padding: 0.6rem 0.75rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
+
+<header>
   <div class="container">
-    <header>
-      <button aria-label="Start your notes now" onclick="location.href='App.html'">Start Your Notes Now</button>
-    </header>
-
-    <h1>✨ Ezimple Notes</h1>
-    <div class="tagline" role="presentation">Easy To use, Next Level Noting</div>
-
-    <!-- Q&A Section -->
-    <section class="qa-section" aria-labelledby="faq-heading">
-      <h2 id="faq-heading">FAQs for Developers & Note Takers</h2>
-      <div class="qa">
-        <div class="qa-question">What is Ezimple Notes?</div>
-        <div class="qa-answer">Ezimple Notes is a lightweight, open source markdown note-taking app designed for developers and users who want a simple, offline, private, and powerful notes experience.</div>
+    <nav>
+      <div class="logo">Ezimple Notes</div>
+      <div>
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="notes.html" target="_blank" rel="noopener">Try App</a>
       </div>
-      <div class="qa">
-        <div class="qa-question">Do I need an account or internet connection?</div>
-        <div class="qa-answer">No accounts or servers required — your data stays local and private, and the app works offline perfectly.</div>
-      </div>
-      <div class="qa">
-        <div class="qa-question">Why should I use Ezimple Notes?</div>
-        <div class="qa-answer">If you love open source tools, markdown formatting, and fast, private note-taking without distractions, Ezimple Notes is built for you.</div>
-      </div>
-    </section>
-
-    <main>
-      <h2>Comparison of Popular Note-Taking Apps</h2>
-
-      <div role="table" aria-label="Comparison of Ezimple Notes vs Other Note Apps" class="comparison-chart">
-        <div role="rowgroup">
-          <div role="row" class="row header">
-            <div role="columnheader" class="cell corner">Features</div>
-            <div role="columnheader" class="cell">Ezimple Notes</div>
-            <div role="columnheader" class="cell">N Notes<br />(Notion)</div>
-            <div role="columnheader" class="cell">O Notes<br />(OneNote)</div>
-            <div role="columnheader" class="cell">S Notes<br />(Samsung Notes)</div>
-            <div role="columnheader" class="cell">G Notes<br />(Google Keep)</div>
-          </div>
-        </div>
-        <div role="rowgroup">
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Open Source</div>
-            <div role="cell" class="cell">✅ Yes</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-          </div>
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Markdown Support</div>
-            <div role="cell" class="cell">✅ Full Support</div>
-            <div role="cell" class="cell">✅ Partial</div>
-            <div role="cell" class="cell">✅ Partial</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-          </div>
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Offline Functionality</div>
-            <div role="cell" class="cell">✅ Fully Offline &amp; Private</div>
-            <div role="cell" class="cell">⚠️ Limited Offline Access</div>
-            <div role="cell" class="cell">✅ Yes (Full Offline)</div>
-            <div role="cell" class="cell">✅ Yes (Full Offline)</div>
-            <div role="cell" class="cell">✅ Yes (Full Offline)</div>
-          </div>
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Data Stored Locally</div>
-            <div role="cell" class="cell">✅ Yes (LocalStorage)</div>
-            <div role="cell" class="cell">❌ Mostly Cloud</div>
-            <div role="cell" class="cell">✅ Yes &amp; Cloud Sync</div>
-            <div role="cell" class="cell">✅ Yes &amp; Cloud Sync</div>
-            <div role="cell" class="cell">✅ Yes &amp; Cloud Sync</div>
-          </div>
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Mobile Friendly</div>
-            <div role="cell" class="cell">✅ Yes (PWA)</div>
-            <div role="cell" class="cell">✅ Yes</div>
-            <div role="cell" class="cell">✅ Yes</div>
-            <div role="cell" class="cell">✅ Yes</div>
-            <div role="cell" class="cell">✅ Yes</div>
-          </div>
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Encryption</div>
-            <div role="cell" class="cell">✅ Optional Encryption</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-            <div role="cell" class="cell">❌ No</div>
-          </div>
-          <div role="row" class="row">
-            <div role="rowheader" class="cell">Sync Across Devices</div>
-            <div role="cell" class="cell">❌ No (LocalStorage Only)</div>
-            <div role="cell" class="cell">✅ Yes (Cloud Sync)</div>
-            <div role="cell" class="cell">✅ Yes (Microsoft Cloud)</div>
-            <div role="cell" class="cell">✅ Yes (Samsung Cloud)</div>
-            <div role="cell" class="cell">✅ Yes (Google Account)</div>
-          </div>
-        </div>
-      </div>
-
-      <h2>How to Clone the Ezimple Notes App</h2>
-      <div class="clone-section" role="region" aria-label="How to clone the Ezimple Notes app from GitHub">
-        <p>Clone this open source app to your computer or server using Git:</p>
-        <code>git clone https://github.com/aysail/ezimple-notes.git</code>
-        <p>Or download the ZIP archive from the <a href="https://github.com/aysail/ezimple-notes" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
-      </div>
-
-      <h2>Why Choose Ezimple Notes?</h2>
-      <ul>
-        <li><span>✔️</span> Fully open source with no hidden tracking</li>
-        <li><span>✔️</span> No accounts or signups required</li>
-        <li><span>✔️</span> Works completely offline with local storage</li>
-        <li><span>✔️</span> Markdown formatting and preview</li>
-        <li><span>✔️</span> Encryption available for private vaults</li>
-        <li><span>✔️</span> Fast, intuitive, and minimal UI</li>
-      </ul>
-    </main>
+    </nav>
   </div>
+</header>
 
-  <footer>
-    © 2025 Ezimple Notes by Jer. All rights reserved.
-  </footer>
+<main class="container">
+  <section class="hero">
+    <h1>
+      Simple, <span class="dynamic-text"></span>
+    </h1>
+    <p>Ezimple Notes is your clean, fast, and private markdown note-taking app — no accounts, no distractions, just your thoughts organized your way.</p>
+    <button class="btn-primary" onclick="window.open('notes.html', '_blank')">Start Taking Notes</button>
+  </section>
+
+  <section id="features">
+    <h2 style="text-align:center; margin-bottom: 48px; font-weight: 700; font-size: 2rem; color: #222;">Features That Empower You</h2>
+    <div class="features">
+      <div class="feature-card reveal">
+        <div class="feature-icon">📂</div>
+        <div class="feature-title">Vaults for Organization</div>
+        <div class="feature-desc">Create multiple vaults to keep your notes organized in separate folders.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">Markdown Support</div>
+        <div class="feature-desc">Write notes with rich formatting using Markdown syntax and preview instantly.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Live Preview</div>
+        <div class="feature-desc">Toggle between editing and full-screen preview for a distraction-free experience.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Offline & Private</div>
+        <div class="feature-desc">Your notes stay on your device, fully accessible without internet.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🚀</div>
+        <div class="feature-title">Auto-Save & Fast</div>
+        <div class="feature-desc">All changes are auto-saved locally so you never lose your work.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Clean & Responsive</div>
+        <div class="feature-desc">Works beautifully on desktop and mobile with a minimal design inspired by Notion.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="download" style="margin-top: 80px; text-align: center;">
+    <h2 style="font-weight: 700; font-size: 2rem; margin-bottom: 24px; color: #222;">Get Started Today</h2>
+    <p style="color: #555; max-width: 480px; margin: 0 auto 32px;">
+      Download or clone the app from GitHub and start organizing your thoughts the Ezimple way.
+    </p>
+    <a href="https://github.com/aysail/ezimple-notes" target="_blank" rel="noopener" class="btn-primary" style="font-weight: 700; text-decoration: none;">
+      View on GitHub
+    </a>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Ezimple Notes — Built with ❤️ by Jer (@aysail)
+</footer>
+
+<script>
+  // Dynamic typing effect for hero text
+  const dynamicTextEl = document.querySelector('.dynamic-text');
+  const words = ['Powerful', 'Simple', 'Fast', 'Private', 'Markdown'];
+  let wordIndex = 0;
+  let charIndex = 0;
+  let deleting = false;
+
+  function type() {
+    const currentWord = words[wordIndex];
+    if (!deleting) {
+      dynamicTextEl.textContent = currentWord.slice(0, charIndex + 1);
+      charIndex++;
+      if (charIndex === currentWord.length) {
+        deleting = true;
+        setTimeout(type, 1400);
+        return;
+      }
+    } else {
+      dynamicTextEl.textContent = currentWord.slice(0, charIndex - 1);
+      charIndex--;
+      if (charIndex === 0) {
+        deleting = false;
+        wordIndex = (wordIndex + 1) % words.length;
+      }
+    }
+    setTimeout(type, deleting ? 80 : 140);
+  }
+  type();
+
+  // Scroll reveal for feature cards
+  function revealOnScroll() {
+    const reveals = document.querySelectorAll('.reveal');
+    const windowHeight = window.innerHeight;
+    reveals.forEach(el => {
+      const elementTop = el.getBoundingClientRect().top;
+      if (elementTop < windowHeight - 100) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+  }
+  window.addEventListener('scroll', revealOnScroll);
+  revealOnScroll();
+</script>
+
 </body>
 </html>
