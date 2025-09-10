@@ -3,995 +3,782 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Markdown Vault Notes</title>
+<title>Ezimple Notes</title>
 <style>
+  /* === Reset & base === */
   * {
     box-sizing: border-box;
   }
-
   body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     height: 100vh;
     display: flex;
-    background: #fafafa;
-    color: #212529;
-  }
-
-  /* Vaults sidebar */
-  #vaults-list {
-    width: 20%;
-    background: #e9ecef;
-    border-right: 1px solid #ddd;
-    display: flex;
     flex-direction: column;
-    box-shadow: inset -1px 0 5px rgba(0,0,0,0.05);
+    background: #fff;
+    color: #222;
   }
-
-  #vaults-list-header {
-    padding: 18px;
-    background: #0d6efd;
-    color: white;
-    font-size: 1.3em;
-    text-align: center;
-    font-weight: 700;
-    flex-shrink: 0;
-    letter-spacing: 1px;
-    user-select: none;
-  }
-
-  #new-vault-btn, #remove-vault-btn {
-    background: white;
-    border: none;
-    padding: 10px;
-    margin: 12px 15px;
-    border-radius: 8px;
+  button {
     cursor: pointer;
-    font-weight: 700;
-    color: #0d6efd;
-    border: 2px solid #0d6efd;
-    transition: background-color 0.25s, color 0.25s;
-    font-size: 1em;
-    user-select: none;
   }
 
-  #new-vault-btn:hover, #remove-vault-btn:hover:not(:disabled) {
-    background: #0d6efd;
-    color: white;
-  }
-
-  #remove-vault-btn:disabled {
-    background: #dee2e6;
-    border-color: #dee2e6;
-    color: #6c757d;
-    cursor: not-allowed;
-  }
-
-  #vaults-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #0d6efd #dee2e6;
-  }
-
-  #vaults-list ul::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  #vaults-list ul::-webkit-scrollbar-track {
-    background: #dee2e6;
-    border-radius: 6px;
-  }
-
-  #vaults-list ul::-webkit-scrollbar-thumb {
-    background-color: #0d6efd;
-    border-radius: 6px;
-  }
-
-  #vaults-list ul li {
-    padding: 12px 18px;
-    border-bottom: 1px solid #ccc;
-    cursor: pointer;
-    white-space: nowrap;
+  /* === Layout === */
+  #app {
+    flex: 1;
+    display: flex;
+    height: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 1.1em;
-    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    border-left: 4px solid transparent;
   }
-
-  #vaults-list ul li.active,
-  #vaults-list ul li:hover {
-    background: #cfe2ff;
-    color: #084298;
-    font-weight: 700;
-    border-left-color: #0d6efd;
-    box-shadow: inset 3px 0 8px rgba(13,110,253,0.2);
-  }
-
-  #vaults-list ul li.empty-message {
-    cursor: default;
-    font-style: italic;
-    color: #6c757d;
-  }
-
-  /* Notes sidebar */
-  #notes-list {
-    width: 28%;
-    background: #f8f9fa;
+  #vaultSidebar {
+    width: 200px;
     border-right: 1px solid #ddd;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    box-shadow: inset -1px 0 5px rgba(0,0,0,0.05);
+    background: #f9f9f9;
   }
-
-  #notes-list-header {
-    padding: 18px;
-    background: #198754;
-    color: white;
-    font-size: 1.3em;
-    text-align: center;
-    font-weight: 700;
-    flex-shrink: 0;
-    letter-spacing: 1px;
-    user-select: none;
-  }
-
-  #new-note-btn {
-    background: white;
-    border: none;
-    padding: 12px;
-    margin: 12px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 700;
-    color: #198754;
-    border: 2px solid #198754;
-    transition: background-color 0.25s, color 0.25s;
-    font-size: 1em;
-    user-select: none;
-  }
-
-  #new-note-btn:hover {
-    background: #198754;
-    color: white;
-  }
-
-  #notes-list ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    flex-grow: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: #198754 #e9ecef;
-  }
-
-  #notes-list ul::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  #notes-list ul::-webkit-scrollbar-track {
-    background: #e9ecef;
-    border-radius: 6px;
-  }
-
-  #notes-list ul::-webkit-scrollbar-thumb {
-    background-color: #198754;
-    border-radius: 6px;
-  }
-
-  #notes-list ul li {
-    padding: 14px 18px;
+  #vaultSidebar header {
+    padding: 1em;
+    font-weight: bold;
+    font-size: 1.2em;
     border-bottom: 1px solid #ddd;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 1.05em;
-    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-    border-left: 4px solid transparent;
-  }
-
-  #notes-list ul li.active,
-  #notes-list ul li:hover {
-    background: #d1e7dd;
-    color: #0f5132;
-    font-weight: 700;
-    border-left-color: #198754;
-    box-shadow: inset 3px 0 8px rgba(25,135,84,0.2);
-  }
-
-  #notes-list ul li.empty-message {
-    cursor: default;
-    font-style: italic;
-    color: #6c757d;
-  }
-
-  /* Editor section */
-  #editor {
-    flex-grow: 1;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    background: white;
-    height: 100vh;
-    box-sizing: border-box;
-  }
-
-  #editor-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
-    gap: 12px;
   }
-
-  #note-title {
-    font-size: 1.8em;
-    padding: 14px 18px;
-    border: 1px solid #ced4da;
-    border-radius: 10px;
-    flex-grow: 1;
-    font-weight: 600;
-    color: #212529;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    user-select: text;
-  }
-
-  #note-title::placeholder {
-    color: #adb5bd;
-  }
-
-  #note-title:focus {
-    outline: none;
-    border-color: #198754;
-    box-shadow: 0 0 8px #198754aa;
-  }
-
-  #toggle-mode-btn {
-    padding: 10px 22px;
-    background: #0d6efd;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    user-select: none;
-    font-weight: 700;
-    font-size: 1em;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    flex-shrink: 0;
-  }
-
-  #toggle-mode-btn:hover:not(:disabled) {
-    background: #0b5ed7;
-    box-shadow: 0 0 8px #0b5ed7cc;
-  }
-
-  #toggle-mode-btn:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-  }
-
-  #delete-note-btn {
-    padding: 10px 20px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    user-select: none;
-    font-weight: 700;
-    font-size: 1em;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    flex-shrink: 0;
-  }
-
-  #delete-note-btn:hover:not(:disabled) {
-    background: #b02a37;
-    box-shadow: 0 0 8px #b02a37cc;
-  }
-
-  #delete-note-btn:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-  }
-
-  #toolbar {
-    margin-bottom: 12px;
-    user-select: none;
-  }
-
-  #toolbar button {
-    background: #e9ecef;
-    border: none;
-    padding: 8px 12px;
-    margin-right: 6px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    color: #495057;
-    transition: background-color 0.25s, color 0.25s;
-    font-size: 1em;
-    user-select: none;
-  }
-
-  #toolbar button:hover:not(:disabled) {
-    background: #0d6efd;
-    color: white;
-  }
-
-  #toolbar button:disabled {
-    background: #ced4da;
-    cursor: not-allowed;
-    color: #6c757d;
-  }
-
-  #editor-textarea {
-    flex-grow: 1;
-    width: 100%;
-    font-size: 1.15em;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    padding: 18px;
-    border: 1px solid #ced4da;
-    border-radius: 12px;
-    resize: none;
-    line-height: 1.5;
-    color: #212529;
-    background: white;
-  }
-
-  #editor-textarea:focus {
-    outline: none;
-    border-color: #0d6efd;
-    box-shadow: 0 0 12px #0d6efdaa;
-  }
-
-  #preview {
-    flex-grow: 1;
-    width: 100%;
-    padding: 18px;
-    border: 1px solid #ced4da;
-    border-radius: 12px;
-    background: white;
+  #vaultList {
+    flex: 1;
     overflow-y: auto;
-    font-size: 1.15em;
-    line-height: 1.5;
-    color: #212529;
   }
-
-  /* Scrollbars for preview */
-  #preview::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  #preview::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-  }
-
-  #preview::-webkit-scrollbar-thumb {
-    background: #0d6efd;
-    border-radius: 10px;
-  }
-
-  /* Editor container with toggle mode */
-  #editor-container {
+  .vault-item {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    user-select: none;
     display: flex;
-    flex-grow: 1;
-    gap: 12px;
-    height: calc(100vh - 114px);
+    justify-content: space-between;
+    align-items: center;
+  }
+  .vault-item.selected {
+    background: #d0e4ff;
+    font-weight: bold;
+  }
+  .vault-item:hover {
+    background: #eee;
+  }
+  .vault-item button {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1em;
   }
 
-  /* Editor textarea and preview when side by side */
-  #editor-textarea, #preview {
+  /* Notes sidebar */
+  #notesSidebar {
+    width: 250px;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+  }
+  #notesSidebar header {
+    padding: 1em;
+    font-weight: bold;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #notesList {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .note-item {
+    padding: 0.4em 1em;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .note-item.selected {
+    background: #cce5ff;
+    font-weight: bold;
+  }
+  .note-item:hover {
+    background: #eee;
+  }
+  .note-item button {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 1em;
+  }
+
+  /* Main editor and preview */
+  #mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  #noteTitleBar {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid #ddd;
+    background: #f7f7f7;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  #noteTitleBar input {
+    font-size: 1.25em;
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+  #tagInput {
+    padding: 4px 8px;
+    font-size: 0.9em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    width: 150px;
+  }
+  #tagsContainer {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    background: #d0e4ff;
+    color: #00529b;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tag button {
+    border: none;
+    background: transparent;
+    font-weight: bold;
+    cursor: pointer;
+    color: #00529b;
+    padding: 0;
+    font-size: 1em;
+    line-height: 1;
+  }
+
+  /* Editor + Preview container */
+  #editorPreview {
+    flex: 1;
+    display: flex;
     height: 100%;
+    overflow: hidden;
   }
 
-  /* Stacked mode (preview hidden) */
-  #editor.stacked #preview {
-    display: none;
+  /* Textarea editor */
+  #noteContent {
+    flex: 1;
+    padding: 1em;
+    border: none;
+    resize: none;
+    font-family: "Fira Mono", monospace, monospace;
+    font-size: 1em;
+    line-height: 1.4;
+    border-right: 1px solid #ddd;
+    outline: none;
+    overflow-y: auto;
   }
 
-  /* Stacked mode (textarea full width) */
-  #editor.stacked #editor-textarea {
-    width: 100%;
+  /* Preview pane */
+  #previewPane {
+    flex: 1;
+    padding: 1em;
+    overflow-y: auto;
+    background: #fff;
+    border-left: 1px solid #ddd;
+  }
+  #previewPane h1, #previewPane h2, #previewPane h3 {
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+  }
+  #previewPane a {
+    color: #1a0dab;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  #previewPane pre {
+    background: #eee;
+    padding: 10px;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  #previewPane code {
+    font-family: monospace;
+    background: #eee;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+
+  /* Toolbar */
+  #toolbar {
+    padding: 0.5em 1em;
+    border-bottom: 1px solid #ddd;
+    background: #f7f7f7;
+    display: flex;
+    gap: 8px;
+  }
+  .toolbar-btn {
+    padding: 4px 8px;
+    border: 1px solid #bbb;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 0.9em;
+    user-select: none;
+  }
+  .toolbar-btn:hover {
+    background: #d0e4ff;
+    border-color: #4a90e2;
+  }
+  .toolbar-btn:active {
+    background: #a0c4ff;
+  }
+  #previewToggleBtn.active {
+    background: #4a90e2;
+    color: white;
+  }
+  #fullPreviewToggleBtn.active {
+    background: #7b61ff;
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    #vaultSidebar {
+      width: 120px;
+    }
+    #notesSidebar {
+      width: 180px;
+    }
+  }
+  @media (max-width: 600px) {
+    #vaultSidebar, #notesSidebar {
+      display: none;
+    }
+    #mainContent {
+      flex: 1;
+    }
   }
 </style>
 </head>
 <body>
+<div id="app">
+  <nav id="vaultSidebar" aria-label="Vaults">
+    <header>
+      Vaults
+      <button id="addVaultBtn" title="Add Vault">+ Vault</button>
+    </header>
+    <div id="vaultList" role="list" tabindex="0"></div>
+  </nav>
 
-<div id="vaults-list">
-  <div id="vaults-list-header">Vaults</div>
-  <button id="new-vault-btn" title="Add new vault">+ New Vault</button>
-  <button id="remove-vault-btn" title="Remove selected vault" disabled>Remove Vault</button>
-  <ul id="vaults-ul">
-    <!-- Vaults will be dynamically added here -->
-  </ul>
-</div>
+  <nav id="notesSidebar" aria-label="Notes">
+    <header>
+      Notes
+      <button id="addNoteBtn" title="Add Note">+ Note</button>
+    </header>
+    <div id="notesList" role="list" tabindex="0"></div>
+  </nav>
 
-<div id="notes-list">
-  <div id="notes-list-header">Notes</div>
-  <button id="new-note-btn" title="Add new note" disabled>+ New Note</button>
-  <ul id="notes-ul">
-    <!-- Notes will be dynamically added here -->
-  </ul>
-</div>
+  <section id="mainContent">
+    <div id="noteTitleBar">
+      <input id="noteTitleInput" type="text" placeholder="Note Title" aria-label="Note Title" />
+      <input id="tagInput" type="text" placeholder="Add tag (press Enter)" aria-label="Add tag" />
+      <div id="tagsContainer" aria-live="polite" aria-atomic="true"></div>
+    </div>
 
-<div id="editor">
-  <div id="editor-header">
-    <input id="note-title" placeholder="Select or create a note..." disabled />
-    <button id="toggle-mode-btn" title="Toggle preview mode" disabled>Preview</button>
-    <button id="delete-note-btn" title="Delete note" disabled>Delete</button>
-  </div>
+    <div id="toolbar" role="toolbar" aria-label="Markdown formatting toolbar">
+      <button class="toolbar-btn" data-md="bold" title="Bold (Ctrl+B)"><b>B</b></button>
+      <button class="toolbar-btn" data-md="italic" title="Italic (Ctrl+I)"><i>I</i></button>
+      <button class="toolbar-btn" data-md="h1" title="Heading 1">H1</button>
+      <button class="toolbar-btn" data-md="h2" title="Heading 2">H2</button>
+      <button class="toolbar-btn" data-md="h3" title="Heading 3">H3</button>
+      <button class="toolbar-btn" data-md="ul" title="Bullet List">• List</button>
+      <button class="toolbar-btn" data-md="ol" title="Numbered List">1. List</button>
+      <button class="toolbar-btn" data-md="link" title="Link">🔗</button>
+      <button class="toolbar-btn" data-md="code" title="Code">Code</button>
+      <button id="previewToggleBtn" class="toolbar-btn" title="Toggle Preview">Preview</button>
+      <button id="fullPreviewToggleBtn" class="toolbar-btn" title="Full Preview">Full View</button>
+    </div>
 
-  <div id="toolbar">
-    <button data-md="bold" title="Bold (Ctrl+B)" disabled><b>B</b></button>
-    <button data-md="italic" title="Italic (Ctrl+I)" disabled><i>I</i></button>
-    <button data-md="heading" title="Heading (Ctrl+H)" disabled>H</button>
-    <button data-md="code" title="Code (Ctrl+`)" disabled>&lt;/&gt;</button>
-    <button data-md="blockquote" title="Blockquote (Ctrl+Q)" disabled>&quot;</button>
-    <button data-md="ulist" title="Unordered List (Ctrl+U)" disabled>&bull;</button>
-    <button data-md="olist" title="Ordered List (Ctrl+O)" disabled>1.</button>
-    <button data-md="link" title="Link (Ctrl+L)" disabled>🔗</button>
-    <button data-md="image" title="Image (Ctrl+G)" disabled>🖼️</button>
-  </div>
-
-  <div id="editor-container">
-    <textarea id="editor-textarea" placeholder="Write your markdown note here..." disabled></textarea>
-    <div id="preview"></div>
-  </div>
+    <div id="editorPreview">
+      <textarea id="noteContent" placeholder="Write your markdown note here..." spellcheck="false" aria-label="Note content"></textarea>
+      <div id="previewPane" aria-live="polite" aria-atomic="true" tabindex="0"></div>
+    </div>
+  </section>
 </div>
 
 <script>
-  // DATA STRUCTURE:
-  // vaults = [{id, name, notes: [{id, title, content}]}]
+  /* === DATA STORAGE === */
   let vaults = [];
   let selectedVaultId = null;
   let selectedNoteId = null;
-  let previewMode = false;
 
-  // DOM Elements
-  const vaultsUl = document.getElementById('vaults-ul');
-  const notesUl = document.getElementById('notes-ul');
-  const newVaultBtn = document.getElementById('new-vault-btn');
-  const removeVaultBtn = document.getElementById('remove-vault-btn');
-  const newNoteBtn = document.getElementById('new-note-btn');
-  const noteTitleInput = document.getElementById('note-title');
-  const toggleModeBtn = document.getElementById('toggle-mode-btn');
-  const deleteNoteBtn = document.getElementById('delete-note-btn');
-  const editorTextarea = document.getElementById('editor-textarea');
-  const previewDiv = document.getElementById('preview');
-  const editorDiv = document.getElementById('editor');
-  const toolbarButtons = document.querySelectorAll('#toolbar button');
+  /* === DOM ELEMENTS === */
+  const vaultListEl = document.getElementById("vaultList");
+  const notesListEl = document.getElementById("notesList");
+  const addVaultBtn = document.getElementById("addVaultBtn");
+  const addNoteBtn = document.getElementById("addNoteBtn");
+  const noteTitleInput = document.getElementById("noteTitleInput");
+  const tagInput = document.getElementById("tagInput");
+  const tagsContainer = document.getElementById("tagsContainer");
+  const noteContentTextarea = document.getElementById("noteContent");
+  const previewPane = document.getElementById("previewPane");
+  const previewToggleBtn = document.getElementById("previewToggleBtn");
+  const fullPreviewToggleBtn = document.getElementById("fullPreviewToggleBtn");
+  const editorPreview = document.getElementById("editorPreview");
 
-  // Utility to generate unique IDs
+  /* === STATE === */
+  let isPreview = true;
+  let isFullPreview = false;
+
+  /* === UTILITIES === */
   function generateId() {
-    return 'id-' + Math.random().toString(36).slice(2, 12);
+    return Math.random().toString(36).slice(2, 10);
   }
 
-  // Save vaults to localStorage
-  function saveData() {
-    localStorage.setItem('markdownVaults', JSON.stringify(vaults));
+  /* === STORAGE === */
+  function saveVaults() {
+    localStorage.setItem("ezimple_vaults", JSON.stringify(vaults));
   }
-
-  // Load vaults from localStorage
-  function loadData() {
-    const data = localStorage.getItem('markdownVaults');
-    if (data) {
-      try {
-        vaults = JSON.parse(data);
-      } catch {
-        vaults = [];
-      }
+  function loadVaults() {
+    const saved = localStorage.getItem("ezimple_vaults");
+    if (saved) {
+      vaults = JSON.parse(saved);
     } else {
       vaults = [];
     }
-    if (vaults.length > 0) {
-      selectedVaultId = vaults[0].id;
-      if (vaults[0].notes.length > 0) {
-        selectedNoteId = vaults[0].notes[0].id;
-      }
-    }
   }
 
-  // RENDER VAULTS
+  /* === GETTERS === */
+  function getVault(id) {
+    return vaults.find(v => v.id === id);
+  }
+  function getNote(vault, noteId) {
+    return vault.notes.find(n => n.id === noteId);
+  }
+
+  /* === RENDER VAULTS === */
   function renderVaults() {
-    vaultsUl.innerHTML = '';
-    if (vaults.length === 0) {
-      const li = document.createElement('li');
-      li.className = 'empty-message';
-      li.textContent = 'No vaults. Create one!';
-      vaultsUl.appendChild(li);
-      selectedVaultId = null;
-      selectedNoteId = null;
-      updateRemoveVaultButton();
-      updateNewNoteBtn();
-      renderNotes();
-      renderEditor();
-      updatePreview();
-      return;
-    }
+    vaultListEl.innerHTML = "";
     vaults.forEach(vault => {
-      const li = document.createElement('li');
-      li.textContent = vault.name;
-      li.dataset.id = vault.id;
-      if (vault.id === selectedVaultId) {
-        li.classList.add('active');
-      }
-      li.addEventListener('click', () => {
+      const div = document.createElement("div");
+      div.className = "vault-item";
+      if (vault.id === selectedVaultId) div.classList.add("selected");
+      div.textContent = vault.name;
+      div.tabIndex = 0;
+
+      // Right click context menu for rename/delete
+      div.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        const choice = prompt(`Rename vault "${vault.name}" or type DELETE to remove it:`, vault.name);
+        if (choice === null) return;
+        if (choice.trim().toUpperCase() === "DELETE") {
+          // Delete vault
+          if (confirm(`Are you sure you want to delete vault "${vault.name}"? This cannot be undone.`)) {
+            vaults = vaults.filter(v => v.id !== vault.id);
+            if (selectedVaultId === vault.id) {
+              selectedVaultId = vaults.length ? vaults[0].id : null;
+              selectedNoteId = null;
+            }
+            saveVaults();
+            renderAll();
+          }
+          return;
+        }
+        if (!choice.trim()) return;
+        vault.name = choice.trim();
+        saveVaults();
+        renderVaults();
+      });
+
+      // Click to select vault
+      div.addEventListener("click", () => {
         if (selectedVaultId !== vault.id) {
           selectedVaultId = vault.id;
-          selectedNoteId = vault.notes.length > 0 ? vault.notes[0].id : null;
-          renderVaults();
-          renderNotes();
-          renderEditor();
-          updatePreview();
-          updateRemoveVaultButton();
-          updateNewNoteBtn();
+          selectedNoteId = vault.notes.length ? vault.notes[0].id : null;
+          renderAll();
         }
       });
-      vaultsUl.appendChild(li);
+
+      vaultListEl.appendChild(div);
     });
-    updateRemoveVaultButton();
   }
 
-  // RENDER NOTES
+  /* === RENDER NOTES === */
   function renderNotes() {
-    notesUl.innerHTML = '';
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault || vault.notes.length === 0) {
-      const li = document.createElement('li');
-      li.className = 'empty-message';
-      li.textContent = 'No notes in this vault.';
-      notesUl.appendChild(li);
-      selectedNoteId = null;
-      updateNewNoteBtn();
-      renderEditor();
-      updatePreview();
-      return;
-    }
+    notesListEl.innerHTML = "";
+    const vault = getVault(selectedVaultId);
+    if (!vault) return;
     vault.notes.forEach(note => {
-      const li = document.createElement('li');
-      li.textContent = note.title || 'Untitled';
-      li.dataset.id = note.id;
-      if (note.id === selectedNoteId) {
-        li.classList.add('active');
-      }
-      li.addEventListener('click', () => {
+      const div = document.createElement("div");
+      div.className = "note-item";
+      if (note.id === selectedNoteId) div.classList.add("selected");
+      div.textContent = note.title;
+      div.tabIndex = 0;
+
+      // Right click to rename/delete
+      div.addEventListener("contextmenu", e => {
+        e.preventDefault();
+        const choice = prompt(`Rename note "${note.title}" or type DELETE to remove it:`, note.title);
+        if (choice === null) return;
+        if (choice.trim().toUpperCase() === "DELETE") {
+          // Delete note
+          if (confirm(`Are you sure you want to delete note "${note.title}"?`)) {
+            vault.notes = vault.notes.filter(n => n.id !== note.id);
+            if (selectedNoteId === note.id) {
+              selectedNoteId = vault.notes.length ? vault.notes[0].id : null;
+            }
+            saveVaults();
+            renderAll();
+          }
+          return;
+        }
+        if (!choice.trim()) return;
+        note.title = choice.trim();
+        saveVaults();
+        renderNotes();
+        if (selectedNoteId === note.id) {
+          noteTitleInput.value = note.title;
+          updatePreview();
+        }
+      });
+
+      // Click to select note
+      div.addEventListener("click", () => {
         if (selectedNoteId !== note.id) {
           selectedNoteId = note.id;
-          renderNotes();
-          renderEditor();
-          updatePreview();
-          updateDeleteNoteBtn();
+          renderAll();
         }
       });
-      notesUl.appendChild(li);
+
+      notesListEl.appendChild(div);
     });
-    updateNewNoteBtn();
-    updateDeleteNoteBtn();
   }
 
-  // RENDER EDITOR (title and content)
-  function renderEditor() {
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault || !selectedNoteId) {
-      noteTitleInput.value = '';
-      noteTitleInput.disabled = true;
-      editorTextarea.value = '';
-      editorTextarea.disabled = true;
-      toggleModeBtn.disabled = true;
-      deleteNoteBtn.disabled = true;
-      toolbarButtons.forEach(btn => btn.disabled = true);
-      previewDiv.innerHTML = '';
-      editorDiv.classList.remove('stacked');
-      previewMode = false;
-      toggleModeBtn.textContent = 'Preview';
-      return;
-    }
-    const note = vault.notes.find(n => n.id === selectedNoteId);
-    if (!note) return;
-    noteTitleInput.disabled = false;
-    editorTextarea.disabled = false;
-    toggleModeBtn.disabled = false;
-    deleteNoteBtn.disabled = false;
-    toolbarButtons.forEach(btn => btn.disabled = false);
-
-    noteTitleInput.value = note.title || '';
-    editorTextarea.value = note.content || '';
-    updatePreview();
+  /* === RENDER TAGS === */
+  function renderTags() {
+    const note = getCurrentNote();
+    tagsContainer.innerHTML = "";
+    if (!note || !note.tags) return;
+    note.tags.forEach(tag => {
+      const span = document.createElement("span");
+      span.className = "tag";
+      span.textContent = tag;
+      const btn = document.createElement("button");
+      btn.textContent = "×";
+      btn.title = "Remove tag";
+      btn.addEventListener("click", () => {
+        note.tags = note.tags.filter(t => t !== tag);
+        saveVaults();
+        renderTags();
+      });
+      span.appendChild(btn);
+      tagsContainer.appendChild(span);
+    });
   }
 
-  // UPDATE PREVIEW
+  /* === UPDATE PREVIEW === */
   function updatePreview() {
-    if (!selectedVaultId || !selectedNoteId) {
-      previewDiv.innerHTML = '';
+    const note = getCurrentNote();
+    if (!note) {
+      previewPane.innerHTML = "<em>No note selected</em>";
       return;
     }
-    let md = editorTextarea.value;
-    previewDiv.innerHTML = markdownToHtml(md);
-  }
-
-  // MARKDOWN TO HTML (basic)
-  function markdownToHtml(md) {
-    // VERY basic markdown rendering: bold, italic, headings, code blocks, blockquotes, lists, links, images
-    let html = md
-      // Escape HTML entities first
-      .replace(/&/g, "&amp;")
+    // Convert markdown to HTML (simple parser)
+    // Also handle [[Link]] syntax to link to other notes
+    let md = note.content || "";
+    md = md
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
+      .replace(/>/g, "&gt;");
 
-      // Code blocks ```
-      .replace(/```([\s\S]*?)```/g, (_, code) => `<pre><code>${code.trim()}</code></pre>`)
+    // Headers
+    md = md.replace(/^### (.*)$/gm, "<h3>$1</h3>");
+    md = md.replace(/^## (.*)$/gm, "<h2>$1</h2>");
+    md = md.replace(/^# (.*)$/gm, "<h1>$1</h1>");
 
-      // Inline code `code`
-      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    // Bold **text**
+    md = md.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    // Italic *text*
+    md = md.replace(/\*(.*?)\*/g, "<em>$1</em>");
+    // Inline code `code`
+    md = md.replace(/`([^`\n]+)`/g, "<code>$1</code>");
 
-      // Headings #####
-      .replace(/^###### (.*)$/gm, '<h6>$1</h6>')
-      .replace(/^##### (.*)$/gm, '<h5>$1</h5>')
-      .replace(/^#### (.*)$/gm, '<h4>$1</h4>')
-      .replace(/^### (.*)$/gm, '<h3>$1</h3>')
-      .replace(/^## (.*)$/gm, '<h2>$1</h2>')
-      .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+    // Links [text](url)
+    md = md.replace(/\[([^\]]+)\]\(([^)]+)\)/g, `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`);
 
-      // Bold **text**
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // Bullet lists
+    md = md.replace(/^\s*• (.*)$/gm, "<li>$1</li>");
+    md = md.replace(/(<li>.*<\/li>)/gms, "<ul>$1</ul>");
 
-      // Italic *text*
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    // Numbered lists
+    md = md.replace(/^\s*\d+\. (.*)$/gm, "<li>$1</li>");
+    md = md.replace(/(<li>.*<\/li>)/gms, "<ol>$1</ol>");
 
-      // Blockquotes
-      .replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>')
+    // Line breaks (replace single \n with <br>)
+    md = md.replace(/\n/g, "<br>");
 
-      // Ordered lists
-      .replace(/^\d+\. (.*)$/gm, '<li>$1</li>')
-      .replace(/(<li>.*<\/li>)/gms, '<ol>$1</ol>')
+    // Custom link syntax for linking other notes: [[Note Title]]
+    md = md.replace(/\[\[([^\]]+)\]\]/g, (match, p1) => {
+      // Find note by title in current vault
+      const vault = getVault(selectedVaultId);
+      if (!vault) return p1;
+      const linkedNote = vault.notes.find(n => n.title === p1);
+      if (!linkedNote) return p1;
+      // Make clickable link to switch note
+      return `<a href="#" class="note-link" data-note-id="${linkedNote.id}">${p1}</a>`;
+    });
 
-      // Unordered lists
-      .replace(/^\* (.*)$/gm, '<li>$1</li>')
-      .replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>')
+    previewPane.innerHTML = md;
 
-      // Links [text](url)
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
-
-      // Images ![alt](url)
-      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img alt="$1" src="$2" style="max-width: 100%; height: auto;">')
-
-      // Paragraphs for lines not wrapped in tags
-      .replace(/^(?!<(h\d|ul|ol|li|blockquote|pre|code|img|a))(.+)$/gm, '<p>$2</p>');
-
-    return html;
+    // Attach click handlers on links to notes
+    [...previewPane.querySelectorAll(".note-link")].forEach(a => {
+      a.addEventListener("click", e => {
+        e.preventDefault();
+        const noteId = e.target.dataset.noteId;
+        if (noteId && selectedNoteId !== noteId) {
+          selectedNoteId = noteId;
+          renderAll();
+        }
+      });
+    });
   }
 
-  // Update Remove Vault button enabled/disabled
-  function updateRemoveVaultButton() {
-    removeVaultBtn.disabled = !selectedVaultId;
-  }
+  /* === RENDER ALL === */
+  function renderAll() {
+    renderVaults();
+    renderNotes();
+    const vault = getVault(selectedVaultId);
+    const note = vault ? getNote(vault, selectedNoteId) : null;
 
-  // Update New Note button enabled/disabled
-  function updateNewNoteBtn() {
-    newNoteBtn.disabled = !selectedVaultId;
-  }
-
-  // Update Delete Note button enabled/disabled
-  function updateDeleteNoteBtn() {
-    deleteNoteBtn.disabled = !selectedNoteId;
-  }
-
-  // EVENTS
-
-  // New Vault button
-  newVaultBtn.addEventListener('click', () => {
-    let name = prompt('Enter vault name:');
-    if (!name) return;
-    name = name.trim();
-    if (name === '') return alert('Vault name cannot be empty.');
-    if (vaults.some(v => v.name.toLowerCase() === name.toLowerCase())) {
-      return alert('A vault with this name already exists.');
+    if (note) {
+      noteTitleInput.value = note.title;
+      noteContentTextarea.value = note.content || "";
+      renderTags();
+    } else {
+      noteTitleInput.value = "";
+      noteContentTextarea.value = "";
+      tagsContainer.innerHTML = "";
     }
-    const newVault = {id: generateId(), name, notes: []};
-    vaults.push(newVault);
-    selectedVaultId = newVault.id;
+    updatePreview();
+    updatePreviewVisibility();
+  }
+
+  /* === CURRENT NOTE === */
+  function getCurrentNote() {
+    const vault = getVault(selectedVaultId);
+    if (!vault) return null;
+    return getNote(vault, selectedNoteId);
+  }
+
+  /* === ADD VAULT === */
+  addVaultBtn.addEventListener("click", () => {
+    const name = prompt("Enter new vault name:");
+    if (!name || !name.trim()) return;
+    vaults.push({
+      id: generateId(),
+      name: name.trim(),
+      notes: [],
+    });
+    selectedVaultId = vaults[vaults.length - 1].id;
     selectedNoteId = null;
-    saveData();
-    renderVaults();
-    renderNotes();
-    renderEditor();
-    updatePreview();
+    saveVaults();
+    renderAll();
   });
 
-  // Remove Vault button
-  removeVaultBtn.addEventListener('click', () => {
-    if (!selectedVaultId) return;
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault) return;
-
-    if (!confirm(`Are you sure you want to remove the vault "${vault.name}" and all its notes? This action cannot be undone.`)) {
+  /* === ADD NOTE === */
+  addNoteBtn.addEventListener("click", () => {
+    if (!selectedVaultId) {
+      alert("Please select or create a vault first.");
       return;
     }
-
-    vaults = vaults.filter(v => v.id !== selectedVaultId);
-
-    // Update selected vault and note
-    if (vaults.length > 0) {
-      selectedVaultId = vaults[0].id;
-      selectedNoteId = vaults[0].notes.length > 0 ? vaults[0].notes[0].id : null;
-    } else {
-      selectedVaultId = null;
-      selectedNoteId = null;
-    }
-
-    saveData();
-    renderVaults();
-    renderNotes();
-    renderEditor();
-    updatePreview();
-  });
-
-  // New Note button
-  newNoteBtn.addEventListener('click', () => {
-    if (!selectedVaultId) return;
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault) return;
-
-    let title = prompt('Enter note title:');
-    if (title === null) return;
-    title = title.trim();
-    if (title === '') title = 'Untitled';
-
-    const newNote = {id: generateId(), title, content: ''};
-    vault.notes.unshift(newNote); // Add to front for quick access
-
+    const vault = getVault(selectedVaultId);
+    const title = prompt("Enter new note title:");
+    if (!title || !title.trim()) return;
+    const newNote = {
+      id: generateId(),
+      title: title.trim(),
+      content: "",
+      tags: [],
+    };
+    vault.notes.push(newNote);
     selectedNoteId = newNote.id;
-    saveData();
-    renderNotes();
-    renderEditor();
-    updatePreview();
+    saveVaults();
+    renderAll();
   });
 
-  // Note title input
-  noteTitleInput.addEventListener('input', () => {
-    if (!selectedVaultId || !selectedNoteId) return;
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault) return;
-    const note = vault.notes.find(n => n.id === selectedNoteId);
+  /* === NOTE TITLE EDIT === */
+  noteTitleInput.addEventListener("input", () => {
+    const note = getCurrentNote();
     if (!note) return;
-
-    note.title = noteTitleInput.value.trim() || 'Untitled';
-    saveData();
+    note.title = noteTitleInput.value.trim() || "Untitled";
+    saveVaults();
     renderNotes();
   });
 
-  // Editor textarea input
-  editorTextarea.addEventListener('input', () => {
-    if (!selectedVaultId || !selectedNoteId) return;
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault) return;
-    const note = vault.notes.find(n => n.id === selectedNoteId);
+  /* === NOTE CONTENT EDIT === */
+  noteContentTextarea.addEventListener("input", () => {
+    const note = getCurrentNote();
     if (!note) return;
-
-    note.content = editorTextarea.value;
-    saveData();
-    updatePreview();
+    note.content = noteContentTextarea.value;
+    saveVaults();
+    if (isPreview) updatePreview();
   });
 
-  // Toggle preview mode button
-  toggleModeBtn.addEventListener('click', () => {
-    previewMode = !previewMode;
-    if (previewMode) {
-      editorDiv.classList.add('stacked');
-      toggleModeBtn.textContent = 'Edit';
-    } else {
-      editorDiv.classList.remove('stacked');
-      toggleModeBtn.textContent = 'Preview';
+  /* === TAG INPUT === */
+  tagInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const val = tagInput.value.trim();
+      if (!val) return;
+      const note = getCurrentNote();
+      if (!note) return;
+      note.tags = note.tags || [];
+      if (!note.tags.includes(val)) {
+        note.tags.push(val);
+        saveVaults();
+        renderTags();
+      }
+      tagInput.value = "";
     }
   });
 
-  // Delete note button
-  deleteNoteBtn.addEventListener('click', () => {
-    if (!selectedVaultId || !selectedNoteId) return;
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault) return;
-    const note = vault.notes.find(n => n.id === selectedNoteId);
-    if (!note) return;
+  /* === REMOVE TAGS handled in renderTags() with buttons === */
 
-    if (!confirm(`Are you sure you want to delete the note "${note.title}"? This action cannot be undone.`)) {
-      return;
-    }
-
-    vault.notes = vault.notes.filter(n => n.id !== selectedNoteId);
-    selectedNoteId = vault.notes.length > 0 ? vault.notes[0].id : null;
-    saveData();
-    renderNotes();
-    renderEditor();
-    updatePreview();
-  });
-
-  // Toolbar buttons (bold, italic, heading, code, etc.)
-  toolbarButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!selectedVaultId || !selectedNoteId) return;
-
-      const mdCommand = btn.dataset.md;
-      if (!mdCommand) return;
-
-      applyMarkdownCommand(mdCommand);
+  /* === TOOLBAR BUTTONS === */
+  document.querySelectorAll(".toolbar-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const md = btn.dataset.md;
+      if (!md) return;
+      insertMarkdown(md);
     });
   });
 
-  // Apply markdown command to selected text in editor
-  function applyMarkdownCommand(command) {
-    const textarea = editorTextarea;
+  /* === INSERT MARKDOWN TEXT AT CURSOR POSITION === */
+  function insertMarkdown(type) {
+    const textarea = noteContentTextarea;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    let selectedText = textarea.value.substring(start, end);
-    let before = textarea.value.substring(0, start);
-    let after = textarea.value.substring(end);
-    let newText = '';
-    let newCursorPos = end;
+    const text = textarea.value;
+    const selected = text.slice(start, end);
 
-    switch(command) {
-      case 'bold':
-        if (selectedText) {
-          newText = `**${selectedText}**`;
-          newCursorPos = start + newText.length;
-        } else {
-          newText = `****`;
-          newCursorPos = start + 2;
-        }
+    let insertText = "";
+    let cursorOffset = 0;
+
+    switch(type) {
+      case "bold":
+        insertText = `**${selected || "bold text"}**`;
+        cursorOffset = selected ? 0 : 10;
         break;
-
-      case 'italic':
-        if (selectedText) {
-          newText = `*${selectedText}*`;
-          newCursorPos = start + newText.length;
-        } else {
-          newText = `**`;
-          newCursorPos = start + 1;
-        }
+      case "italic":
+        insertText = `*${selected || "italic text"}*`;
+        cursorOffset = selected ? 0 : 12;
         break;
-
-      case 'heading':
-        // Add # at start of line(s)
-        const lines = selectedText.split('\n');
-        for(let i=0; i<lines.length; i++) {
-          if (!lines[i].startsWith('#')) {
-            lines[i] = '# ' + lines[i];
-          }
-        }
-        newText = lines.join('\n');
-        newCursorPos = start + newText.length;
+      case "h1":
+        insertText = `# ${selected || "Heading 1"}`;
+        cursorOffset = selected ? 0 : 9;
         break;
-
-      case 'code':
-        if (selectedText) {
-          newText = `\`${selectedText}\``;
-          newCursorPos = start + newText.length;
-        } else {
-          newText = '``';
-          newCursorPos = start + 1;
-        }
+      case "h2":
+        insertText = `## ${selected || "Heading 2"}`;
+        cursorOffset = selected ? 0 : 9;
         break;
-
-      case 'blockquote':
-        const bqLines = selectedText.split('\n').map(line => '> ' + line);
-        newText = bqLines.join('\n');
-        newCursorPos = start + newText.length;
+      case "h3":
+        insertText = `### ${selected || "Heading 3"}`;
+        cursorOffset = selected ? 0 : 9;
         break;
-
-      case 'ulist':
-        const ulLines = selectedText.split('\n').map(line => `* ${line}`);
-        newText = ulLines.join('\n');
-        newCursorPos = start + newText.length;
+      case "ul":
+        insertText = selected
+          ? selected.split("\n").map(line => "• " + line).join("\n")
+          : "• List item";
+        cursorOffset = selected ? 0 : 10;
         break;
-
-      case 'olist':
-        const olLines = selectedText.split('\n').map((line, i) => `${i+1}. ${line}`);
-        newText = olLines.join('\n');
-        newCursorPos = start + newText.length;
+      case "ol":
+        insertText = selected
+          ? selected.split("\n").map((line, i) => (i+1) + ". " + line).join("\n")
+          : "1. List item";
+        cursorOffset = selected ? 0 : 11;
         break;
-
-      case 'link':
-        if (selectedText) {
-          newText = `[${selectedText}](url)`;
-          newCursorPos = start + newText.length - 4; // Place cursor inside url
-        } else {
-          newText = `[text](url)`;
-          newCursorPos = start + 1;
-        }
+      case "link":
+        insertText = `[${selected || "link text"}](url)`;
+        cursorOffset = selected ? 0 : 11;
         break;
-
-      case 'image':
-        if (selectedText) {
-          newText = `![alt](${selectedText})`;
-          newCursorPos = start + newText.length;
-        } else {
-          newText = `![alt](url)`;
-          newCursorPos = start + 6;
-        }
+      case "code":
+        insertText = `\`${selected || "code"}\``;
+        cursorOffset = selected ? 0 : 6;
         break;
-
-      default:
-        return;
     }
 
-    const updatedContent = before + newText + after;
-    editorTextarea.value = updatedContent;
-
-    // Update note content in data
-    const vault = vaults.find(v => v.id === selectedVaultId);
-    if (!vault) return;
-    const note = vault.notes.find(n => n.id === selectedNoteId);
-    if (!note) return;
-    note.content = updatedContent;
-    saveData();
-
-    // Set cursor position
+    const before = text.slice(0, start);
+    const after = text.slice(end);
+    textarea.value = before + insertText + after;
     textarea.focus();
-    textarea.selectionStart = textarea.selectionEnd = newCursorPos;
+    if (!selected) {
+      textarea.selectionStart = textarea.selectionEnd = start + insertText.length - cursorOffset;
+    } else {
+      textarea.selectionStart = start;
+      textarea.selectionEnd = start + insertText.length;
+    }
 
-    updatePreview();
+    // Trigger input event to save and update preview
+    textarea.dispatchEvent(new Event("input"));
   }
 
-  // Keyboard shortcuts for markdown commands
-  document.addEventListener('keydown', (e) => {
-    if (!selectedVaultId || !selectedNoteId) return;
-    if (e.ctrlKey || e.metaKey) {
-      switch(e.key.toLowerCase()) {
-        case 'b':
-          e.preventDefault();
-          applyMarkdownCommand('bold');
-          break;
-        case 'i':
-          e.preventDefault();
-          applyMarkdownCommand('italic');
-          break;
-        case 'h':
-          e.preventDefault();
-          applyMarkdownCommand('heading');
-          break;
-        case '`':
-          e.preventDefault();
-          applyMarkdownCommand('code');
-          break;
-        case 'q':
-          e.preventDefault();
-          applyMarkdownCommand('blockquote');
-          break;
-        case 'u':
-          e.preventDefault();
-          applyMarkdownCommand('ulist');
-          break;
-        case 'o':
-          e.preventDefault();
-          applyMarkdownCommand('olist');
-          break;
-        case 'l':
-          e.preventDefault();
-          applyMarkdownCommand('link');
-          break;
-        case 'g':
-          e.preventDefault();
-          applyMarkdownCommand('image');
-          break;
-      }
-    }
+  /* === PREVIEW TOGGLE === */
+  previewToggleBtn.addEventListener("click", () => {
+    isPreview = !isPreview;
+    updatePreviewVisibility();
   });
 
-  // INITIAL LOAD
-  loadData();
-  renderVaults();
-  renderNotes();
-  renderEditor();
-  updatePreview();
-</script>
+  /* === FULL PREVIEW TOGGLE === */
+  fullPreviewToggleBtn.addEventListener("click", () => {
+    isFullPreview = !isFullPreview;
+    updatePreviewVisibility();
+  });
 
+  /* === UPDATE PREVIEW VISIBILITY === */
+  function updatePreviewVisibility() {
+    if (isFullPreview) {
+      // Preview pane takes full editorPreview area
+      previewPane.style.display = "block";
+      noteContentTextarea.style.display = "none";
+      previewToggleBtn.classList.remove("active");
+      fullPreviewToggleBtn.classList.add("active");
+    } else if (isPreview) {
+      // Show editor + preview side by side
+      previewPane.style.display = "block";
+      noteContentTextarea.style.display = "block";
+      previewToggleBtn.classList.add("active");
+      fullPreviewToggleBtn.classList.remove("active");
+    } else {
+      // Show only editor
+      previewPane.style.display = "none";
+      noteContentTextarea.style.display = "block";
+      previewToggleBtn.classList.remove("active");
+      fullPreviewToggleBtn.classList.remove("active");
+    }
+  }
+
+  /* === INITIAL LOAD === */
+  loadVaults();
+  if (vaults.length) {
+    selectedVaultId = vaults[0].id;
+    const vault = getVault(selectedVaultId);
+    if (vault && vault.notes.length) selectedNoteId = vault.notes[0].id;
+  }
+  renderAll();
+</script>
 </body>
 </html>
